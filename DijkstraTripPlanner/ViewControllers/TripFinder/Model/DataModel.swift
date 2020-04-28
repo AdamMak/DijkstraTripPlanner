@@ -28,10 +28,4 @@ struct Coordinates: Codable {
 struct LongLat: Codable {
     let lat: Double
     let long: Double
-
-    func createCoordinate() -> CLLocationCoordinate2D {
-        return CLLocationCoordinate2DMake(lat, long)
-    }
 }
-
-

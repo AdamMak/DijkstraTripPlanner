@@ -9,7 +9,7 @@ MapViewController|TripViewController
 
 ## Frameworks Used
 
-No 3rd party frameworks were used in this app
+Quick and Nimble
 
 ## Requirements
 

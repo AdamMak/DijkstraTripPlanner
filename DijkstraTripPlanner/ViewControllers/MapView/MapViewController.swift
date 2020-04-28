@@ -7,7 +7,6 @@
 //
 
 import UIKit
-
 import MapKit
 
 class MapViewController: UIViewController {
@@ -37,15 +36,13 @@ class MapViewController: UIViewController {
         tripLabel.text = viewModel.tripText
         priceLabel.text = viewModel.tripPrice
 
-        setUpMapRoute(nodes: viewModel.nodes)
+        setUpMapRoute(pins: viewModel.pins)
     }
 
-    private func setUpMapRoute(nodes: [TripNode]) {
+    private func setUpMapRoute(pins: [CustomPin]) {
         mapView.removeOverlays(mapView.overlays)
         mapView.removeAnnotations(mapView.annotations)
 
-        let pins = nodes.map { CustomPin.init(pinTitle: $0.name,
-                                            location: $0.coordinates.createCoordinate()) }
         pins.forEach {
             mapView.addAnnotation($0)
         }

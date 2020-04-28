@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapKit
 
 class MapViewModel {
     private let trip: CheapestTrip
@@ -24,8 +25,13 @@ class MapViewModel {
         let text = "Price: £\(trip.price)"
         return text
     }
-
-    var nodes: [TripNode] {
-        return trip.nodes
+    
+    var pins: [CustomPin] {
+        let pins = trip.nodes.map {
+            CustomPin.init(pinTitle: $0.name,
+                           location: CLLocationCoordinate2D(latitude: $0.coordinates.lat,
+                                                            longitude: $0.coordinates.long))
+        }
+        return pins
     }
 }
