@@ -44,9 +44,11 @@ class PathFinder: PathFinderProtocol {
             $0.visited = false
         }
 
-        guard let startNode = nodes.first(where: {$0.name == origin}) else { return .failure(PathFinderErrors.noNodeFound) }
+        guard let startNode = nodes.first(where: {$0.name == origin}) else { return .failure(PathFinderErrors.noNodeFound)
+        }
 
-        guard let endNode = nodes.first(where: {$0.name == destination}) else { return .failure(PathFinderErrors.noNodeFound) }
+        guard let endNode = nodes.first(where: {$0.name == destination}) else { return .failure(PathFinderErrors.noNodeFound)
+        }
 
         guard let path = cheapestPath(source: startNode, destination: endNode) else {
             return .failure(PathFinderErrors.noRouteFound)
@@ -120,6 +122,7 @@ class PathFinder: PathFinderProtocol {
                 }
             }
         }
+        
         return nodes
     }
 }

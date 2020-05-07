@@ -12,8 +12,7 @@ import Combine
 class TripFinderViewModel {
     @Published var origin: String = ""
     @Published var destination: String = ""
-
-    private(set) var trip = CurrentValueSubject<CheapestTrip?, Never>(nil)
+    @Published var trip: CheapestTrip?
     private(set) var suggestions = CurrentValueSubject<[String], Never>([])
     
     private let pathFinder: PathFinderProtocol
@@ -21,7 +20,7 @@ class TripFinderViewModel {
     private var disposables = Set<AnyCancellable>()
 
     var validRoute: AnyPublisher<Bool, Never> {
-        return trip.map { $0 != nil }.eraseToAnyPublisher()
+        return $trip.map { $0 != nil }.eraseToAnyPublisher()
     }
 
     deinit {
@@ -45,17 +44,17 @@ class TripFinderViewModel {
         }).store(in: &disposables)
 
         $destination.sink(receiveValue: { [weak self] text in
-                       self?.getSuggestions(from: text)
-            }).store(in: &disposables)
-
-        tripPublisher.sink(receiveValue: { result in
-            switch result {
-            case .success(let trip):
-                self.trip.value = trip
-            default:
-                self.trip.value = nil
-            }
+            self?.getSuggestions(from: text)
         }).store(in: &disposables)
+
+        tripPublisher.map { result -> CheapestTrip? in
+            if case let .success(trip) = result {
+                return trip
+            }
+
+            return nil
+        }.assign(to: \.trip, on: self)
+            .store(in: &disposables)
     }
 
     private func setUpConnections() {

@@ -101,7 +101,7 @@ class TripFinderViewController: UIViewController {
     }
 
     @IBAction private func showRoute() {
-        guard let trip = viewModel.trip.value else {
+        guard let trip = viewModel.trip else {
             return
         }
         
