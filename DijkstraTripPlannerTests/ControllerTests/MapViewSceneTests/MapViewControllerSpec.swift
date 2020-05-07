@@ -23,7 +23,7 @@ class MapViewControllerSpec: QuickSpec {
 
             beforeEach {
                 let trip = CheapestTrip(nodes: nodes, price: 200)
-                let viewModel = MapViewModel(trip: trip)
+                let viewModel = MapViewModel(trip: trip, coordinator: nil)
                 viewController = MapViewController(viewModel: viewModel)
                 UIApplication.shared.windows.first?.rootViewController = viewController
             }

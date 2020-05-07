@@ -96,10 +96,10 @@ class PathFinder: PathFinderProtocol {
         }
 
         for node in nodes {
-            let matchingFromConnections = connections.filter{$0.from == node.name}
+            let matchingFromConnections = connections.filter { $0.from == node.name }
 
             for connection in matchingFromConnections {
-                let nodesToAdd = nodes.filter{$0.name == connection.to}
+                let nodesToAdd = nodes.filter { $0.name == connection.to }
 
                 nodesToAdd.forEach {
                     let nodeConnection = NodeConnection(to: $0, price: connection.price)
@@ -112,9 +112,9 @@ class PathFinder: PathFinderProtocol {
             // then will only be able to find a trip going London -> New York
             // however if set to true, then can also find trip going New York -> London
             if(isBirectional) {
-                let matchingToConnections = connections.filter{$0.to == node.name}
+                let matchingToConnections = connections.filter { $0.to == node.name }
                 for connection in matchingToConnections {
-                    let nodesToAdd = nodes.filter{$0.name == connection.from}
+                    let nodesToAdd = nodes.filter { $0.name == connection.from }
                     nodesToAdd.forEach {
                         let nodeConnection = NodeConnection(to: $0, price: connection.price)
                         node.connections.append(nodeConnection)

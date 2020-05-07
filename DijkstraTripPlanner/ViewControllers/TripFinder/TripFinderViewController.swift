@@ -33,9 +33,8 @@ class TripFinderViewController: UIViewController {
         return tableView
     }()
 
-    init(viewModel: TripFinderViewModel, delegate: TripFinderViewControllerDelegate? = nil) {
+    init(viewModel: TripFinderViewModel) {
         self.viewModel = viewModel
-        self.delegate = delegate
         
         super.init(nibName: TripFinderViewController.identifier, bundle: nil)
     }
@@ -101,11 +100,7 @@ class TripFinderViewController: UIViewController {
     }
 
     @IBAction private func showRoute() {
-        guard let trip = viewModel.trip else {
-            return
-        }
-        
-        delegate?.show(trip: trip)
+        viewModel.showTrip()
     }
 }
 

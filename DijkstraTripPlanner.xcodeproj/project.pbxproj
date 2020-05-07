@@ -15,8 +15,6 @@
 		6AA56B45245359180035A5BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AA56B44245359180035A5BF /* Assets.xcassets */; };
 		6AA56B48245359180035A5BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AA56B46245359180035A5BF /* LaunchScreen.storyboard */; };
 		6AA56BA124535D220035A5BF /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA56B9324535D220035A5BF /* Coordinator.swift */; };
-		6AA56BA524535D220035A5BF /* Navigatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA56B9924535D220035A5BF /* Navigatable.swift */; };
-		6AA56BA624535D220035A5BF /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA56B9A24535D220035A5BF /* Navigator.swift */; };
 		6AA56BA724535D220035A5BF /* UIView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA56B9C24535D220035A5BF /* UIView+Helpers.swift */; };
 		6AA56BA924535D220035A5BF /* UITableView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA56B9E24535D220035A5BF /* UITableView+Helpers.swift */; };
 		6AA56BCA245360800035A5BF /* TripFinderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA56BC4245360800035A5BF /* TripFinderViewModel.swift */; };
@@ -48,6 +46,7 @@
 		6AA56C11245714790035A5BF /* TripFinderCoordinatorSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA56C10245714790035A5BF /* TripFinderCoordinatorSpec.swift */; };
 		6AA56C14245715240035A5BF /* UIApplication+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA56C13245715240035A5BF /* UIApplication+Helpers.swift */; };
 		6AA56C17245716FC0035A5BF /* MapCoordinatorSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA56C16245716FC0035A5BF /* MapCoordinatorSpec.swift */; };
+		6AEA4C5024B874BB002A6859 /* Presentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEA4C4F24B874BB002A6859 /* Presentable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,8 +70,6 @@
 		6AA56B4E245359180035A5BF /* DijkstraTripPlannerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DijkstraTripPlannerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AA56B54245359180035A5BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6AA56B9324535D220035A5BF /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
-		6AA56B9924535D220035A5BF /* Navigatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigatable.swift; sourceTree = "<group>"; };
-		6AA56B9A24535D220035A5BF /* Navigator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigator.swift; sourceTree = "<group>"; };
 		6AA56B9C24535D220035A5BF /* UIView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Helpers.swift"; sourceTree = "<group>"; };
 		6AA56B9E24535D220035A5BF /* UITableView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Helpers.swift"; sourceTree = "<group>"; };
 		6AA56BC4245360800035A5BF /* TripFinderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripFinderViewModel.swift; sourceTree = "<group>"; };
@@ -103,6 +100,7 @@
 		6AA56C10245714790035A5BF /* TripFinderCoordinatorSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripFinderCoordinatorSpec.swift; sourceTree = "<group>"; };
 		6AA56C13245715240035A5BF /* UIApplication+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Helpers.swift"; sourceTree = "<group>"; };
 		6AA56C16245716FC0035A5BF /* MapCoordinatorSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCoordinatorSpec.swift; sourceTree = "<group>"; };
+		6AEA4C4F24B874BB002A6859 /* Presentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,7 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				6AA56BCE245361AD0035A5BF /* PathFinder */,
-				6AA56B8F24535D220035A5BF /* Common */,
+				6AA56B8F24535D220035A5BF /* Core */,
 				6AA56B8524535C9B0035A5BF /* ViewControllers */,
 				6AA56B5E245359400035A5BF /* Resources */,
 				6AA56B5D245359360035A5BF /* Delegates */,
@@ -198,31 +196,22 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		6AA56B8F24535D220035A5BF /* Common */ = {
+		6AA56B8F24535D220035A5BF /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				6AA56B9024535D220035A5BF /* Coordinator */,
-				6AA56B9824535D220035A5BF /* Navigator */,
 				6AA56B9B24535D220035A5BF /* Helpers */,
 			);
-			path = Common;
+			path = Core;
 			sourceTree = "<group>";
 		};
 		6AA56B9024535D220035A5BF /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
 				6AA56B9324535D220035A5BF /* Coordinator.swift */,
+				6AEA4C4F24B874BB002A6859 /* Presentable.swift */,
 			);
 			path = Coordinator;
-			sourceTree = "<group>";
-		};
-		6AA56B9824535D220035A5BF /* Navigator */ = {
-			isa = PBXGroup;
-			children = (
-				6AA56B9924535D220035A5BF /* Navigatable.swift */,
-				6AA56B9A24535D220035A5BF /* Navigator.swift */,
-			);
-			path = Navigator;
 			sourceTree = "<group>";
 		};
 		6AA56B9B24535D220035A5BF /* Helpers */ = {
@@ -514,9 +503,7 @@
 				6AA56BA924535D220035A5BF /* UITableView+Helpers.swift in Sources */,
 				6AA56BD2245361C60035A5BF /* PathFinder.swift in Sources */,
 				6AA56B3C245359170035A5BF /* AppDelegate.swift in Sources */,
-				6AA56BA524535D220035A5BF /* Navigatable.swift in Sources */,
 				6AA56BD9245367FB0035A5BF /* Data+Helpers.swift in Sources */,
-				6AA56BA624535D220035A5BF /* Navigator.swift in Sources */,
 				6AA56C022456F2ED0035A5BF /* main.swift in Sources */,
 				6AA56B3E245359170035A5BF /* SceneDelegate.swift in Sources */,
 				6AA56BE724557EBC0035A5BF /* MapViewController.swift in Sources */,
@@ -531,6 +518,7 @@
 				6AA56BCC245360810035A5BF /* TripFinderCoordinator.swift in Sources */,
 				6AA56BEC24558B410035A5BF /* Path.swift in Sources */,
 				6AA56BA124535D220035A5BF /* Coordinator.swift in Sources */,
+				6AEA4C5024B874BB002A6859 /* Presentable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

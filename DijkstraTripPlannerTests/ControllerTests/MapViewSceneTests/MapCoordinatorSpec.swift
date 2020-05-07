@@ -16,22 +16,23 @@ class MapCoordinatorSpec: QuickSpec {
     override func spec() {
         describe("start") {
             var coordinator: MapCoordinator!
+            var navigationController: UINavigationController!
 
             beforeEach {
-                let navigator = Navigator(navigationController: UINavigationController())
+                navigationController = UINavigationController()
                 let nodes = [
                     TripNode.init(name: "London", coordinates: LongLat(lat: 5, long: 5)),
                     TripNode.init(name: "New York", coordinates: LongLat(lat: 5, long: 5)),
                 ]
                 let trip = CheapestTrip(nodes: nodes, price: 200)
 
-                coordinator = MapCoordinator(navigatable: navigator, trip: trip)
+                coordinator = MapCoordinator(presenter: navigationController, trip: trip)
                 coordinator.start()
-                UIApplication.shared.windows.first?.rootViewController = navigator.navigationController
+                UIApplication.shared.windows.first?.rootViewController = navigationController
             }
 
             it("presents an instance of MapViewController") {
-                expect(UIApplication.topViewController()).toEventually(beAnInstanceOf(MapViewController.self))
+                expect(navigationController.viewControllers.last).toEventually(beAnInstanceOf(MapViewController.self))
             }
         }
     }

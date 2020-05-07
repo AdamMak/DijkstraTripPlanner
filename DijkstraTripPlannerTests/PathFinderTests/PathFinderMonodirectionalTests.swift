@@ -7,49 +7,63 @@
 //
 
 import XCTest
+import Quick
+import Nimble
+
 @testable import DijkstraTripPlanner
 
-class PathFinderMonodirectionalTests: XCTestCase {
-    var pathFinder: PathFinder!
+class PathFinderMonodirectionalTests: QuickSpec {
+    override func spec() {
+        describe("Given isBirectional is disabled") {
+            var pathFinder: PathFinder!
 
-    override func setUp() {
-        pathFinder = PathFinder(isBirectional: false)
+            beforeEach {
+                pathFinder = PathFinder(isBirectional: false)
 
-        let fileURL = Bundle(for: type(of: self)).url(forResource: "connections", withExtension: "json")
+                let fileURL = Bundle(for: type(of: self)).url(forResource: "connections", withExtension: "json")
 
-        do {
-            let content = try String(contentsOf: fileURL!, encoding: String.Encoding.utf8)
-            let data = content.data(using: .utf8)
-            let dataModel = try data!.map(decodable: DataModel.self)
-            pathFinder.setupNodes(connections: dataModel.connections)
-        } catch {
-            print(error)
-        }
-    }
+                do {
+                    let content = try String(contentsOf: fileURL!, encoding: String.Encoding.utf8)
+                    let data = content.data(using: .utf8)
+                    let dataModel = try data!.map(decodable: DataModel.self)
+                    pathFinder.setupNodes(connections: dataModel.connections)
+                } catch {
+                    print(error)
+                }
+            }
 
-    override func tearDown() {
-        
-    }
+            context("when a trip that requires monodirectional searching is entered") {
+                var result: Result<CheapestTrip, Error>!
+                let expectedNodes = 2
 
-    func testSimpleRouteTrip() {
-        let result = pathFinder.cheapestTrip(origin: "London", destination: "New York")
+                beforeEach {
+                    result = pathFinder.cheapestTrip(origin: "London", destination: "New York")
+                }
 
-        switch result {
-        case .success(let trip):
-            XCTAssert(trip.nodes.count == 2)
-        case .failure(let error):
-            print(error)
-        }
-    }
+                it("returns a trip successfully") {
+                    if case let .success(trip) = result {
+                        expect(trip.nodes.count).to(equal(expectedNodes))
+                    } else {
+                        fail()
+                    }
+                }
+            }
 
-    func testBidirectionalRouteTrip() {
-        let result = pathFinder.cheapestTrip(origin: "New York", destination: "London")
+            context("when a trip that requires bidirectional searching is entered") {
+                var result: Result<CheapestTrip, Error>!
 
-        switch result {
-        case .success(_):
-            XCTFail("Should throw error as bidirectional is false")
-        case .failure(let error):
-            XCTAssertNotNil(error)
+                beforeEach {
+                    result = pathFinder.cheapestTrip(origin: "New York", destination: "London")
+                }
+
+                it("returns no route found error") {
+                    if case let .failure(error) = result {
+                        expect(error as? PathFinderErrors).to(equal(PathFinderErrors.noRouteFound))
+                    } else {
+                        fail()
+                    }
+                }
+            }
         }
     }
 }

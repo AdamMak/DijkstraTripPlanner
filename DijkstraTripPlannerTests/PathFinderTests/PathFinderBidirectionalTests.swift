@@ -7,92 +7,129 @@
 //
 
 import XCTest
+import Quick
+import Nimble
+
 @testable import DijkstraTripPlanner
 
-class PathFinderBidirectionalTests: XCTestCase {
-    var pathFinder: PathFinder!
+class PathFinderBidirectionalTests: QuickSpec {
+    override func spec() {
+        describe("Given isBirectional is enabled") {
+            var pathFinder: PathFinder!
 
-    override func setUp() {
-        pathFinder = PathFinder()
-        
-        let fileURL = Bundle(for: type(of: self)).url(forResource: "connections", withExtension: "json")
+            beforeEach {
+                pathFinder = PathFinder(isBirectional: true)
 
-        do {
-            let content = try String(contentsOf: fileURL!, encoding: String.Encoding.utf8)
-            let data = content.data(using: .utf8)
-            let dataModel = try data!.map(decodable: DataModel.self)
-            pathFinder.setupNodes(connections: dataModel.connections)
-        } catch {
-            print(error)
-        }
-    }
+                let fileURL = Bundle(for: type(of: self)).url(forResource: "connections", withExtension: "json")
 
-    override func tearDown() {
-        
-    }
+                do {
+                    let content = try String(contentsOf: fileURL!, encoding: String.Encoding.utf8)
+                    let data = content.data(using: .utf8)
+                    let dataModel = try data!.map(decodable: DataModel.self)
+                    pathFinder.setupNodes(connections: dataModel.connections)
+                } catch {
+                    print(error)
+                }
+            }
 
-    func testSimpleRouteTrip() {
-        let result = pathFinder.cheapestTrip(origin: "London", destination: "New York")
+            context("when a trip that requires monodirectional searching is entered") {
+                var result: Result<CheapestTrip, Error>!
+                let expectedNodes = 2
 
-        switch result {
-        case .success(let trip):
-            XCTAssert(trip.nodes.count == 2)
-        case .failure(let error):
-            print(error)
-        }
-    }
+                beforeEach {
+                    result = pathFinder.cheapestTrip(origin: "London", destination: "New York")
+                }
 
-    func testMultipleRoutes() {
-        let result = pathFinder.cheapestTrip(origin: "London", destination: "Sydney")
+                it("returns a trip successfully") {
+                    if case let .success(trip) = result {
+                        expect(trip.nodes.count).to(equal(expectedNodes))
+                    } else {
+                        fail()
+                    }
+                }
+            }
 
-        switch result {
-        case .success(let trip):
-            XCTAssert(trip.nodes.count == 3)
-        case .failure(let error):
-            print(error)
-        }
-    }
+            context("when a trip that requires bidirectional searching is entered") {
+                var result: Result<CheapestTrip, Error>!
+                let expectedNodes = 2
 
-    func testSimpleBidirectionalTrip() {
-        let result = pathFinder.cheapestTrip(origin: "New York", destination: "London")
+                beforeEach {
+                    result = pathFinder.cheapestTrip(origin: "New York", destination: "London")
+                }
 
-        switch result {
-        case .success(let trip):
-            XCTAssert(trip.nodes.count == 2)
-        case .failure(let error):
-            print(error)
-        }
-    }
+                it("returns a trip successfully") {
+                    if case let .success(trip) = result {
+                        expect(trip.nodes.count).to(equal(expectedNodes))
+                    } else {
+                        fail()
+                    }
+                }
+            }
 
-    func testMultipleBidirectionalTrip() {
-        let result = pathFinder.cheapestTrip(origin: "Tokyo", destination: "New York")
+            context("when an trip is entered that requires multiple nodes") {
+                var result: Result<CheapestTrip, Error>!
+                let expectedNodes = 3
 
-        switch result {
-        case .success(let trip):
-            XCTAssert(trip.nodes.count == 3)
-        case .failure(let error):
-            print(error)
-        }
-    }
+                beforeEach {
+                    result = pathFinder.cheapestTrip(origin: "Tokyo", destination: "New York")
+                }
 
-    func testCheapestRoute() {
-        let result = pathFinder.cheapestTrip(origin: "London", destination: "Cape Town")
+                it("returns a trip successfully") {
+                    if case let .success(trip) = result {
+                        expect(trip.nodes.count).to(equal(expectedNodes))
+                    } else {
+                        fail()
+                    }
+                }
+            }
 
-        switch result {
-        case .success(let trip):
-            XCTAssert(trip.nodes.count == 2)
-        case .failure(let error):
-            print(error)
-        }
-    }
+            context("when the origin and destination entered is the same") {
+                var result: Result<CheapestTrip, Error>!
 
-    func testInvalidTrip() {
-        let result = pathFinder.cheapestTrip(origin: "London", destination: "Germany")
-        switch result {
-        case .success(_):
-            XCTFail("Should throw error")
-        case .failure(let error):
-            XCTAssertNotNil(error)
+                beforeEach {
+                    result = pathFinder.cheapestTrip(origin: "London", destination: "London")
+                }
+
+                it("returns a noNodeFound error") {
+                    if case let .failure(error) = result {
+                        expect(error as? PathFinderErrors).to(equal(PathFinderErrors.sameNode))
+                    } else {
+                        fail()
+                    }
+                }
+            }
+
+            context("when an invalid destination is entered") {
+                var result: Result<CheapestTrip, Error>!
+
+                beforeEach {
+                    result = pathFinder.cheapestTrip(origin: "London", destination: "Germany")
+                }
+
+                it("returns a noNodeFound error") {
+                    if case let .failure(error) = result {
+                        expect(error as? PathFinderErrors).to(equal(PathFinderErrors.noNodeFound))
+                    } else {
+                        fail()
+                    }
+                }
+            }
+
+            context("when an invalid origin destination is entered") {
+                var result: Result<CheapestTrip, Error>!
+
+                beforeEach {
+                    result = pathFinder.cheapestTrip(origin: "Germany", destination: "London")
+                }
+
+                it("returns a noNodeFound error") {
+                    if case let .failure(error) = result {
+                        expect(error as? PathFinderErrors).to(equal(PathFinderErrors.noNodeFound))
+                    } else {
+                        fail()
+                    }
+                }
+            }
         }
     }
 }

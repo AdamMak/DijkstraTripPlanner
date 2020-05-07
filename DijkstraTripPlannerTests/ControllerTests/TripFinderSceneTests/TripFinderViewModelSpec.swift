@@ -27,7 +27,7 @@ class TripFinderViewModelSpec: QuickSpec {
                 
                 beforeEach {
                     let pathFinder = StubPathFinder(tripFound: true)
-                    viewModel = TripFinderViewModel(pathFinder: pathFinder)
+                    viewModel = TripFinderViewModel(pathFinder: pathFinder, coordinator: nil)
 
                     viewModel.validRoute.sink(receiveValue: { value in
                         result = value
@@ -44,7 +44,7 @@ class TripFinderViewModelSpec: QuickSpec {
 
                 beforeEach {
                     let pathFinder = StubPathFinder(tripFound: false)
-                    viewModel = TripFinderViewModel(pathFinder: pathFinder)
+                    viewModel = TripFinderViewModel(pathFinder: pathFinder, coordinator: nil)
 
                     viewModel.validRoute.sink(receiveValue: { value in
                         result = value

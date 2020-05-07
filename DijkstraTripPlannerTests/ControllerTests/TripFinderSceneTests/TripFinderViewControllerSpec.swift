@@ -12,11 +12,11 @@ import Nimble
 
 @testable import DijkstraTripPlanner
 
-private class SpyTripFinderViewControllerDelegate: TripFinderViewControllerDelegate {
-    private(set) var showCalled = false
+private class SpyTripFinderCoordinator: TripFinderCoordinator {
+    private(set) var startMapCalled = false
 
-    func show(trip: CheapestTrip) {
-        showCalled = true
+    override func startMapCoordinator(trip: CheapestTrip) {
+        startMapCalled = true
     }
 }
 
@@ -24,12 +24,12 @@ class TripFinderViewControllerSpec: QuickSpec {
     override func spec() {
         describe("on viewDidLoad") {
             var viewController: TripFinderViewController!
-            var spy: SpyTripFinderViewControllerDelegate!
+            var spy: SpyTripFinderCoordinator!
 
             beforeEach {
-                spy = SpyTripFinderViewControllerDelegate()
-                let viewModel = TripFinderViewModel(pathFinder: PathFinder())
-                viewController = TripFinderViewController(viewModel: viewModel, delegate: spy)
+                spy = SpyTripFinderCoordinator(presenter: nil)
+                let viewModel = TripFinderViewModel(pathFinder: PathFinder(), coordinator: spy)
+                viewController = TripFinderViewController(viewModel: viewModel)
                 UIApplication.shared.windows.first?.rootViewController = viewController
             }
 
@@ -67,7 +67,7 @@ class TripFinderViewControllerSpec: QuickSpec {
                     }
 
                     it("sends a message to its delegate") {
-                        expect(spy.showCalled).toEventually(beTrue())
+                        expect(spy.startMapCalled).toEventually(beTrue())
                     }
                 }
             }

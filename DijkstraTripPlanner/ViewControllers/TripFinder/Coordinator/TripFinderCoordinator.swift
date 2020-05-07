@@ -9,28 +9,15 @@
 import Foundation
 
 class TripFinderCoordinator: Coordinator {
-    var didFinish: (() -> Void)?
-    var childCoordinators: [Coordinator] = []
-    var navigatable: Navigatable?
-
-    required init(navigatable: Navigatable?) {
-        self.navigatable = navigatable
+    override func start() {
+        let viewModel = TripFinderViewModel(pathFinder: PathFinder(), coordinator: self)
+        let viewController = TripFinderViewController(viewModel: viewModel)
+        show(viewController)
     }
 
-    func start() {
-        let viewModel = TripFinderViewModel(pathFinder: PathFinder())
-        let viewController = TripFinderViewController(viewModel: viewModel, delegate: self)
-        navigate(viewController: viewController, presentationType: .push)
-    }
-
-    private func startMapCoordinator(trip: CheapestTrip) {
-        let coordinator = MapCoordinator(navigatable: navigatable, trip: trip)
-        setUpCoordinator(coordinator)
+    func startMapCoordinator(trip: CheapestTrip) {
+        let coordinator = MapCoordinator(presenter: presenter, trip: trip)
+        coordinator.start()
     }
 }
 
-extension TripFinderCoordinator: TripFinderViewControllerDelegate {
-    func show(trip: CheapestTrip) {
-        startMapCoordinator(trip: trip)
-    }
-}

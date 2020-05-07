@@ -16,16 +16,17 @@ class TripFinderCoordinatorSpec: QuickSpec {
     override func spec() {
         describe("start") {
             var coordinator: TripFinderCoordinator!
+            var navigationController: UINavigationController!
 
             beforeEach {
-                let navigator = Navigator(navigationController: UINavigationController())
-                coordinator = TripFinderCoordinator(navigatable: navigator)
+                navigationController = UINavigationController()
+                coordinator = TripFinderCoordinator(presenter: navigationController)
                 coordinator.start()
-                UIApplication.shared.windows.first?.rootViewController = navigator.navigationController
+                UIApplication.shared.windows.first?.rootViewController = navigationController
             }
 
             it("presents an instance of TripFinderViewController") {
-                expect(UIApplication.topViewController()).toEventually(beAnInstanceOf(TripFinderViewController.self))
+                expect(navigationController.viewControllers.last).toEventually(beAnInstanceOf(TripFinderViewController.self))
             }
 
             context("given show:trip is called") {
@@ -36,11 +37,11 @@ class TripFinderCoordinatorSpec: QuickSpec {
                     ]
 
                     let trip = CheapestTrip(nodes: nodes, price: 200)
-                    coordinator.show(trip: trip)
+                    coordinator.startMapCoordinator(trip: trip)
                 }
 
                 it("shows MapViewController") {
-                    expect(UIApplication.topViewController()).toEventually(beAnInstanceOf(MapViewController.self))
+                    expect(navigationController.viewControllers.last).toEventually(beAnInstanceOf(MapViewController.self))
                 }
             }
         }

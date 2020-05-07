@@ -9,19 +9,17 @@
 import Foundation
 
 class MapCoordinator: Coordinator {
-    var didFinish: (() -> Void)?
-    var childCoordinators: [Coordinator] = []
-    var navigatable: Navigatable?
     private let trip: CheapestTrip
 
-    required init(navigatable: Navigatable?, trip: CheapestTrip) {
-        self.navigatable = navigatable
+    required init(presenter: Presentable?, trip: CheapestTrip) {
         self.trip = trip
+
+        super.init(presenter: presenter)
     }
 
-    func start() {
-        let viewModel = MapViewModel(trip: trip)
+    override func start() {
+        let viewModel = MapViewModel(trip: trip, coordinator: self)
         let viewController = MapViewController(viewModel: viewModel)
-        navigate(viewController: viewController, presentationType: .push)
+        show(viewController)
     }
 }

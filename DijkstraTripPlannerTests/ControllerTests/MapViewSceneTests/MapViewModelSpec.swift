@@ -23,7 +23,7 @@ class MapViewModelSpec: QuickSpec {
 
         beforeEach {
             let trip = CheapestTrip(nodes: nodes, price: 200)
-            viewModel = MapViewModel(trip: trip)
+            viewModel = MapViewModel(trip: trip, coordinator: nil)
         }
 
         describe("tripText") {

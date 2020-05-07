@@ -17,44 +17,44 @@ class TripFinderViewModel {
     
     private let pathFinder: PathFinderProtocol
     private var connections: [Connections] = []
-    private var disposables = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
+    private let coordinator: TripFinderCoordinator?
 
     var validRoute: AnyPublisher<Bool, Never> {
         return $trip.map { $0 != nil }.eraseToAnyPublisher()
     }
 
     deinit {
-        disposables.removeAll()
+        cancellables.removeAll()
     }
 
-    init(pathFinder: PathFinderProtocol) {
+    init(pathFinder: PathFinderProtocol,
+         coordinator: TripFinderCoordinator?) {
         self.pathFinder = pathFinder
+        self.coordinator = coordinator
 
         setUpConnections()
 
-        let tripPublisher = Publishers
+        Publishers
             .CombineLatest($origin.eraseToAnyPublisher(),
                            $destination.eraseToAnyPublisher())
             .map { [weak self] tuple in
                 self?.pathFinder.cheapestTrip(origin: tuple.0, destination: tuple.1)
-        }.receive(on: DispatchQueue.main)
-
-        $origin.sink(receiveValue: { [weak self] text in
-            self?.getSuggestions(from: text)
-        }).store(in: &disposables)
-
-        $destination.sink(receiveValue: { [weak self] text in
-            self?.getSuggestions(from: text)
-        }).store(in: &disposables)
-
-        tripPublisher.map { result -> CheapestTrip? in
+        }.map { result -> CheapestTrip? in
             if case let .success(trip) = result {
                 return trip
             }
 
             return nil
-        }.assign(to: \.trip, on: self)
-            .store(in: &disposables)
+        }.assign(to: \.trip, on: self).store(in: &cancellables)
+
+        $origin.sink(receiveValue: { [weak self] text in
+            self?.getSuggestions(from: text)
+        }).store(in: &cancellables)
+
+        $destination.sink(receiveValue: { [weak self] text in
+            self?.getSuggestions(from: text)
+        }).store(in: &cancellables)
     }
 
     private func setUpConnections() {
@@ -87,5 +87,13 @@ class TripFinderViewModel {
         }
         
         return (matches.count > 0) ? matches : []
+    }
+
+    func showTrip() {
+        guard let trip = trip else {
+            return
+        }
+
+        coordinator?.startMapCoordinator(trip: trip)
     }
 }

@@ -11,9 +11,12 @@ import MapKit
 
 class MapViewModel {
     private let trip: CheapestTrip
+    private let coordinator: MapCoordinator?
 
-    init(trip: CheapestTrip) {
+    init(trip: CheapestTrip,
+         coordinator: MapCoordinator?) {
         self.trip = trip
+        self.coordinator = coordinator
     }
 
     var tripText: String {
